@@ -30,7 +30,6 @@ public class Buoyancy : MonoBehaviour
 		
 		meshNormalsAmount = mesh.normals.Length;
 		meshVerticesLength = mesh.vertices.Length;
-		myPos = transform.position;
 	}
 
 	void Update()
@@ -42,6 +41,7 @@ public class Buoyancy : MonoBehaviour
 	{
 		underwaterVerts = 0;
 		float deltaTime = Time.deltaTime;
+		myPos = transform.position;
 		
 		for (var index = 0; index < meshNormalsAmount; index++)
 		{
@@ -49,7 +49,7 @@ public class Buoyancy : MonoBehaviour
 			if (worldVertPos.y < waterLineHack)
 			{
 				// Splashes only on surface of water plane
-				if (worldVertPos.y > waterLineHack - 0.1f)
+				/*if (worldVertPos.y > waterLineHack - 0.1f)
 				{
 					float velocityMagnitude = rb.velocity.magnitude;
 					if (velocityMagnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
@@ -60,7 +60,7 @@ public class Buoyancy : MonoBehaviour
 							OnSplash.Invoke(gameObject, worldVertPos, rb.velocity);
 						}
 					}
-				}
+				}*/
 				Vector3	forceAmount = transform.TransformDirection(-mesh.normals[index]) * (forceScalar * deltaTime);
 				rb.AddForceAtPosition(forceAmount, worldVertPos);
 				underwaterVerts++;
