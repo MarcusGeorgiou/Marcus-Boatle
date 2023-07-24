@@ -23,13 +23,18 @@ public class Buoyancy : MonoBehaviour
 	private Vector3 myPos;
 	private float meshVerticesLength;
 	
+	private Vector3[] meshNormals;
+	private Vector3[] meshVerts;
+
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody>();
 		mesh = GetComponent<MeshFilter>().mesh;
+		meshNormals = mesh.normals;
+		meshVerts = mesh.vertices;
 		
-		meshNormalsAmount = mesh.normals.Length;
-		meshVerticesLength = mesh.vertices.Length;
+		meshNormalsAmount = meshNormals.Length;
+		meshVerticesLength = meshNormals.Length;
 	}
 
 	void Update()
@@ -42,10 +47,10 @@ public class Buoyancy : MonoBehaviour
 		underwaterVerts = 0;
 		float deltaTime = Time.deltaTime;
 		myPos = transform.position;
-		
+
 		for (var index = 0; index < meshNormalsAmount; index++)
 		{
-			worldVertPos = myPos + transform.TransformDirection(mesh.vertices[index]);
+			worldVertPos = myPos + transform.TransformDirection(meshVerts[index]);
 			if (worldVertPos.y < waterLineHack)
 			{
 				// Splashes only on surface of water plane
@@ -61,8 +66,7 @@ public class Buoyancy : MonoBehaviour
 						}
 					}
 				}*/
-				Vector3	forceAmount = transform.TransformDirection(-mesh.normals[index]) * (forceScalar * deltaTime);
-				rb.AddForceAtPosition(forceAmount, worldVertPos);
+				rb.AddForceAtPosition(transform.TransformDirection(-meshNormals[index]) * (forceScalar * deltaTime), worldVertPos);
 				underwaterVerts++;
 			}
 			// HACK to remove sunken boats
